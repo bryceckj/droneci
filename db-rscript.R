@@ -55,4 +55,3 @@ write(tableswrite,paste('TABLES','-',now,'.html',sep=''))
 write.csv(baseline_measurements,paste('measurements','-',now,'.html',sep=''))
 
 dbDisconnect(redshift_conn)
-```

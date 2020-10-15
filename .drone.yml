@@ -18,7 +18,7 @@ steps:
     - USERNAME=$DRONE_COMMIT_AUTHOR
     - echo $TESTPASS
     - docker build . -t droner:1
-    - docker run -d -e USER=$USERNAME -e PASS=$TESTPASS -v /reproducible2:/reproducible2 --name=$DRONE_COMMIT --network=host droner:1
+    - docker run -d -e USER=$USERNAME -e PASS=$TESTPASS -v /scratch:/scratch --name=$DRONE_COMMIT --network=host droner:1
     # -v /home/$USERNAME:/home/$USERNAME
     - sleep 13
     - docker logs $DRONE_COMMIT

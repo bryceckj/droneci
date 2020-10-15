@@ -1,35 +1,36 @@
 # Drone CI
 CI/CD pipeline for automating workflows with containers
+
 https://docs.drone.io/
 
-"Pipelines help you automate steps in your software delivery process, such as initiating code builds, running automated tests, and deploying to a staging or production environment.
+    "Pipelines help you automate steps in your software delivery process, such as initiating code builds, running automated tests, and deploying to a staging or production environment.
 
-Pipeline execution is triggered by a source code repository. A change in code triggers a webhook to Drone which runs the corresponding pipeline. Other common triggers include automatically scheduled or user-initiated workflows.
+    Pipeline execution is triggered by a source code repository. A change in code triggers a webhook to Drone which runs the corresponding pipeline. Other common triggers include automatically scheduled or user-initiated workflows.
 
-Pipelines are configured by placing a .drone.yml file in the root of your git repository. The yaml syntax is designed to be easy to read and expressive so that anyone viewing the repository can understand the workflow."
+    Pipelines are configured by placing a .drone.yml file in the root of your git repository. The yaml syntax is designed to be easy to read and expressive so that anyone viewing the repository can understand the workflow."
 
-## Setup
+# Setup
 
-### Drone Server
-To run Drone pipelines, first you have to set up a Drone Server. Since Drone is container-native, every component, including the server, can be run as a container.
+## Drone Server & Runner
+To run Drone pipelines, first you have to set up a Drone Server and Runner(s). Since Drone is container-native, every component, including the server and runner, can be run as containers. In fact, every step of the pipeline is also run as containers. 
 
-#### Compute Resources ####
+### Compute Resources ###
 To set up a Drone server container, first provision the necessary compute resources. For example, we can use an AWS EC2 instance. For this instance, make sure the security group allows inbound rules for port 80 (HTTP) and port 3000.
 
 After that, we will configure some pre-requisites, and then spin up a Drone container in the instance.
 
-#### Pre-Reqs ####
+## Pre-Reqs: ##
 
-##### Mounts #####
+### Mounts ###
 If using an NFS, make sure to mount the NFS in the EC2.
 `sudo mount -t nfs -o nolock,hard <NFS-SERVER-IP-ADDR>:/scratch /scratch`
 
-##### Drone CLI #####
+### Drone CLI ###
 optional: Install Drone CLI: 
 `curl -L https://github.com/drone/drone-cli/releases/latest/download/drone_linux_amd64.tar.gz | tar zx`
 `sudo install -t /usr/local/bin drone`
 
-##### Github Drone Webhook #####
+### Github Drone Webhook ###
 - Log into github.com
 - Click on your user menu (top right corner), select Settings
 - On the left side menu, select Developer Settings
@@ -40,11 +41,12 @@ optional: Install Drone CLI:
     - Callback URL: <http://IP-address/login>
 - Note down your Client ID and Client Secret
 
-##### Push to ECR? #####
+### Push to ECR? ###
 If you are pushing any images to AWS ECR, make sure to login to ECR
 `$(aws ecr get-login --no-include-email --region $region --registry-id $ECR_ACCOUNT_ID)`
 
-#### Set up Drone Server in Docker
+
+## Drone Server
 ```
 docker pull drone/drone:1
 openssl rand -hex 16
@@ -65,7 +67,7 @@ docker run \
 --env=DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO} \
 --env=DRONE_AGENTS_ENABLED=true \
 --env=DRONE_GITHUB_SERVER=https://github.com \
---env=DRONE_USER_CREATE=username:bryceckj,admin:true \
+--env=DRONE_USER_CREATE=username:svcusr,admin:true \
 --env=PATH=$PATH:/usr/sbin \
 --privileged \
 --publish=80:80 \
@@ -77,8 +79,7 @@ docker run \
 drone/drone:1
 ```
 
-
-### Drone Runner ###
+## Drone Runner ##
 ```
 docker pull drone/drone-runner-docker:1
 

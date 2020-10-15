@@ -14,6 +14,7 @@ steps:
     - name: dockersock
       path: /var/run/docker.sock
   commands:
+    # Pass a secret as an env variable, build and run a container, which runs an Rscript, which queries a database
     - USERNAME=$DRONE_COMMIT_AUTHOR
     - echo $TESTPASS
     - docker build . -t droner:1
@@ -30,4 +31,4 @@ volumes:
 ---
 kind: secret
 name: password
-data: blablapass
+data: blablapass # can be encrypted in Drone

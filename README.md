@@ -103,5 +103,5 @@ docker run -d \
 drone/drone-runner-docker:1
 ```
 
-After setting up the Drone Server and Runner, you can access the Drone GUI by visiting http://<IP-ADDR>
+After setting up the Drone Server and Runner, you can access the Drone GUI by visiting http://DRONE_SERVER_HOST_IP
 By default, every time you push your code to the hooked repository, it will trigger the Drone pipeline.

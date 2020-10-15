@@ -1,0 +1,33 @@
+---
+kind: pipeline
+type: docker
+name: pipe1
+
+steps:
+- name: test
+  image: docker:latest
+  # image: brycechong/droner:demo
+  environment:
+    TESTPASS:
+      from_secret: password
+  volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
+  commands:
+    - USERNAME=$DRONE_COMMIT_AUTHOR
+    - echo $TESTPASS
+    - docker build . -t droner:1
+    - docker run -d -e USER=$USERNAME -e PASS=$TESTPASS -v /reproducible2:/reproducible2 --name=$DRONE_COMMIT --network=host droner:1
+    # -v /home/$USERNAME:/home/$USERNAME
+    - sleep 13
+    - docker logs $DRONE_COMMIT
+    - docker rm $DRONE_COMMIT
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
+
+---
+kind: secret
+name: password
+data: blablapass

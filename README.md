@@ -1,23 +1,19 @@
 # Drone CI
 CI/CD pipeline for automating workflows with containers
-
 https://docs.drone.io/
-
-    "Pipelines help you automate steps in your software delivery process, such as initiating code builds, running automated tests, and deploying to a staging or production environment.
-
-    Pipeline execution is triggered by a source code repository. A change in code triggers a webhook to Drone which runs the corresponding pipeline. Other common triggers include automatically scheduled or user-initiated workflows.
-
-    Pipelines are configured by placing a .drone.yml file in the root of your git repository. The yaml syntax is designed to be easy to read and expressive so that anyone viewing the repository can understand the workflow."
 
 # Setup
 
 ## Drone Server & Runner
-To run Drone pipelines, first you have to set up a Drone Server and Runner(s). Since Drone is container-native, every component, including the server and runner, can be run as containers. In fact, every step of the pipeline is also run as containers. 
+To run Drone pipelines, first set up a Drone Server and Runner(s). 
+Since Drone is container-native, every component, including the server and runner, can be run as containers. 
+Every step of the pipeline is also run as containers. 
 
 ### Compute Resources ###
-To set up a Drone server container, first provision the necessary compute resources. For example, we can use an AWS EC2 instance. For this instance, make sure the security group allows inbound rules for port 80 (HTTP) and port 3000.
+To set up a Drone server container, first provision the necessary compute resources. 
+For example, we can use an AWS EC2 instance. For this EC2, ensure the security group allows inbound rules for port 80 (HTTP) and port 3000.
 
-After that, we will configure some pre-requisites, and then spin up a Drone container in the instance.
+After that, we will configure some pre-requisites, and then spin up a Drone container in the EC2.
 
 ## Pre-Reqs: ##
 
@@ -42,7 +38,7 @@ optional: Install Drone CLI:
 - Note down your Client ID and Client Secret
 
 ### Push to ECR? ###
-If you are pushing any images to AWS ECR, make sure to login to ECR
+If pushing container images to AWS ECR, first login to ECR:
 `$(aws ecr get-login --no-include-email --region $region --registry-id $ECR_ACCOUNT_ID)`
 
 
@@ -103,5 +99,5 @@ docker run -d \
 drone/drone-runner-docker:1
 ```
 
-After setting up the Drone Server and Runner, you can access the Drone GUI by visiting http://DRONE_SERVER_HOST_IP
-By default, every time you push your code to the hooked repository, it will trigger the Drone pipeline.
+After setting up the Drone Server and Runner, access the Drone GUI by visiting http://<DRONE_SERVER_HOST_IP>
+By default, webhook is tied to push, i.e. every time you push your code to the hooked repository, it will trigger the Drone pipeline.
